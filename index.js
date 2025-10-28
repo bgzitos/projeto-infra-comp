@@ -4,7 +4,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.get('/', (req, res) => {
-    res.status(200).send('Olá, Givisiez! Aplicação funcionando');
+    res.status(200).send('Pipeline CI/CD funcionando!');
 });
 
 const server = app.listen(PORT, () => {
