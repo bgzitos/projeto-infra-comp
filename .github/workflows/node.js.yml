@@ -1,0 +1,32 @@
+name: Pipeline CI/CD Desafio-Infra
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-e-test:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Configuração Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+        cache: 'npm'
+
+    - name: Instalar dependências
+      run: npm ci
+
+    - name: Rodar testes
+      run: npm test
+
+    - name: Deploy feito no Render
+      if: github.ref == 'refs/heads/main' && github.event.name == 'push'
+      run: curl "${{ secrets.RENDER_DEPLOY_HOOK_URL }}"
