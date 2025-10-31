@@ -33,6 +33,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
+          SONAR_PROJECT_KEY: bgzitos_projeto-infra-comp
+          SONAR_ORGANIZATION: bgzitos
+
   deploy:
     runs-on: ubuntu-latest
     needs: build_test_and_analyze
