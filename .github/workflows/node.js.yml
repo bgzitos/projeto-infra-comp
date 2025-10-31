@@ -34,8 +34,8 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
           args: >
-          -Dsonar.projectKey=<bgzitos_projeto-infra-comp>
-          -Dsonar.organization=<bgzitos>
+          -Dsonar.projectKey=bgzitos_projeto-infra-comp
+          -Dsonar.organization=bgzitos
 
   deploy:
     runs-on: ubuntu-latest
