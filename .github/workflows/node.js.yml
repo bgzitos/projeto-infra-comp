@@ -8,37 +8,36 @@ on:
 
 jobs:
   build_test_and_analyze:
-
     runs-on: ubuntu-latest
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 
+      
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+      
+      - name: Instalar dependências
+        run: npm ci
+      
+      - name: Rodar testes com análise
+        run: npm run test:coverage
+      
+      - name: Scan do SonarCloud
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build_test_and_analyze
     
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-
-    - name: Configuração Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '20.x'
-        cache: 'npm'
-
-    - name: Instalar dependências
-      run: npm ci
-
-    - name: Rodar testes com análise
-      run: npm run test:coverage
-
-    - name: Scan do SonarCloud
-      uses: SonarSource/sonarcloud-github-action@master
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-    
-  deploy:
-      runs-on: ubuntu-latest
-      needs: build_test_and_analyze
-  
-      steps:
-  
       - name: Deploy no Render
-        if: github.ref == 'refs/heads/main' && github.event.name == 'push'
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: curl "${{ secrets.RENDER_DEPLOY_HOOK_URL }}"
