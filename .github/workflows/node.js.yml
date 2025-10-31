@@ -32,6 +32,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: >
+          -Dsonar.projectKey=<bgzitos_projeto-infra-comp>
+          -Dsonar.organization=<bgzitos>
 
   deploy:
     runs-on: ubuntu-latest
