@@ -33,11 +33,30 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
-  deploy:
+  build_push_and_deploy:
     runs-on: ubuntu-latest
     needs: build_test_and_analyze
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     
     steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Login no github container registy
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Construir e enviar Docker
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: |
+            ghcr.io/bgzitos/projeto-infra-comp:latest
+            ghcr.io/bgzitos/projeto-infra-comp:${{ github.sha }}
+
       - name: Deploy no Render
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: curl "${{ secrets.RENDER_DEPLOY_HOOK_URL }}"
