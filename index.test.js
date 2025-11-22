@@ -10,7 +10,7 @@ describe('Testes da Aplicação Node.js', () => {
   it('Deve responder com status 200 na rota GET /', async () => {
     const response = await request(app).get('/');
     expect(response.statusCode).toBe(200);
-    expect(response.text).toBe('Pipeline CI/CD compjunior com Docker');
+    expect(response.text).toBe('Aplicação funcionando infra compjr');
   });
 
   it('Deve responder com status 200 e um JSON na rota GET /health', async () => {
